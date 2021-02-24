@@ -4,10 +4,36 @@ header{
     text-align: center;
 }
 
-.searchBtn {
-    padding: 10px;
+
+.days{
+    margin-top: 10px;
 }
 
-.city{
-    border: 2px solid black;
+p {
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+h4 {
+    white-space: normal;
+}
+
+h6 {
+    white-space: nowrap;
+}
+
+#uvIndexCondition {
+    background-color: red;
+    color: white;
+    padding: 3px;
+}
+
+.icon {
+    width: 55px;
+    height: 55px;
+}
+
+.forcast-day-card{
+    background-color: #037bff;
+    color: #fff;
 }
