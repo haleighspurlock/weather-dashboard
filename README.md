@@ -10,7 +10,7 @@
 
 ## Description
 ---
-UPDATE DISCRIPTION HERE
+Utilizing the Open Weather Map API, I was able to create a functional weather database. The application will allow you to search a city and receive current weather information, as well as a 5-day forcast. The cities you search will be stored on your page for easy access. 
 
 Deployed Website: 
 
