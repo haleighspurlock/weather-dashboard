@@ -5,53 +5,56 @@
 
 
 var apiKey = '49283df107f4b9c05123a0013d52be80';
-var date = moment();
+var date = moment.utc();
 var formatDate = date.format('MM/DD/YYYY');
 
 function populateWeatherData(city){
     get5DayForcast(city)
     getOneLocationForcast(city)
-    getIndex(city)
     createSearchHistory(city)
 }
 
-function getIndex(lat, long) {
-    // var requestUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${long}&appid=${apiKey}`
-    // function makeRequest(indexResponse){
-    //     console.log(indexResponse)
-    // }
-    // $.ajax({
-    //     url: requestUrl,
-    //     method: 'GET',
-    // }).then(makeRequest)
+function getIndex(forcastInfo) {
+    var requestUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${forcastInfo.coord.lat}&lon=${forcastInfo.coord.lon}&appid=${apiKey}`
+    function makeRequest(indexResponse){
+        var UV = indexResponse.value
+        $('#uvIndexCondition').text(UV)
+
+        if (UV >= 6.0) {
+            $('#uvIndexCondition').css('background-color', 'red')
+            $('#uvIndexCondition').css('color', 'white')    
+        } else if (UV <= 3.0) {
+            $('#uvIndexCondition').css('background-color', 'green')
+            $('#uvIndexCondition').css('color', 'white')     
+        } else {
+            $('#uvIndexCondition').css('background-color', 'yellow')
+            $('#uvIndexCondition').css('color', 'black')    
+        }
+
+    }
+    $.ajax({
+        url: requestUrl,
+        method: 'GET',
+    }).then(makeRequest)
 }
+
 // gets searched location info from API
 function getOneLocationForcast(city) {
     var requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
 
     function populateOneDayForcast(dailyForcastInfo){
-        // var uvIndex = getIndex(dailyForcastInfo.coord.lat, dailyForcastInfo.coord.lon)
-        // var dailyCityWeather = $('#dailyCityWeather');
-        // var element = `
-        //     <h3><b>${dailyForcastInfo.name} ${formatDate}</b><img class='icon' src='./assets/images/sunnyicon.svg'/></h3>
-        //     <p>${dailyForcastInfo.main.temp}</p>
-        //     <p>${dailyForcastInfo.main.humidity}</p>
-        //     <p>${dailyForcastInfo.wind.speed}</p>
-        //     <p>UV Index: <span id='uvIndexCondition'>${uvIndex}</span> </p>
-        //     `
-        // dailyCityWeather.append(element);
-        // return dailyForcastInfo
         $('#name').text(dailyForcastInfo.name)
-        $('#temp').text(dailyForcastInfo.main.temp)
+        $('#temp').text(convertKelvin(dailyForcastInfo.main.temp))
         $('#date').text(formatDate)
-        $('#humidity').text(dailyForcastInfo.main.humidity)
+        $('#humidity').text(dailyForcastInfo.main.humidity + '%')
         $('#windspeed').text(dailyForcastInfo.wind.speed)
         $('#icon').attr("src",`http://openweathermap.org/img/wn/${dailyForcastInfo.weather[0].icon}@2x.png`)
+        return dailyForcastInfo
     }
     $.ajax({
         url: requestUrl,
         method: 'GET',
-    }).then(populateOneDayForcast)
+    }).then(populateOneDayForcast).then(getIndex)
 }
 // populates 5 day forcast info from API
 function get5DayForcast(city){
@@ -64,7 +67,7 @@ function get5DayForcast(city){
         var pastDay = -1;
         for (var weatherHour of weekForcastInfo.list) {
             var day = moment(weatherHour.dt_txt).dayOfYear();
-            if (day !== pastDay) {
+            if (day !== pastDay && dailyForcastHour.length < 5) {
                 dailyForcastHour.push(weatherHour)
                 pastDay = day   
             }
@@ -75,8 +78,8 @@ function get5DayForcast(city){
                 <div class='card-body p-1'>
                     <h6 class='card-title'>${moment(weatherHour.dt_txt).format('MM/DD/YYYY')}</h6>
                     <img class='card-img icon' src='http://openweathermap.org/img/wn/${weatherHour.weather[0].icon}@2x.png'/>
-                    <p class='card-text'>Temp:${weatherHour.main.temp}&deg;F</p>
-                    <p class='card-text'>${weatherHour.main.humidity}</p>
+                    <p class='card-text'>Temp: ${convertKelvin(weatherHour.main.temp)}&deg;F</p>
+                    <p class='card-text'>Humidity: ${weatherHour.main.humidity}%</p>
                 </div>
             </div>
             `
@@ -125,6 +128,10 @@ function createSearchHistory(){
     }
     
     
+    }
+
+    function convertKelvin(k){
+        return ((((k-273.15)*9)/5) + 32).toFixed(1);
     }
     
     createSearchHistory()

@@ -14,8 +14,8 @@ UPDATE DISCRIPTION HERE
 
 Deployed Website: 
 
-![Work Day Scheduler](assets/work-day-schedule-pic.png)
-![Work Day Scheduler](assets/local-storage-pic.png)
+![Work Day Scheduler](assets/images/weather-home.png)
+![Work Day Scheduler](assets/images/weather-city.png)
 
 ## Requirements
 ---
