@@ -33,7 +33,7 @@
             <h4>Search for a City:</h4>
             <div class='search'>
                 <div class="input-group mb-3">
-                    <input type="text" id='searchCity' class="form-control">
+                    <input type="text" id='searchCity' value='phoenix'class="form-control">
                     <button class="btn btn-primary" type="button" id="submitBtn"><i class="fas fa-search"></i></button>
                   </div>
             </div>
@@ -51,11 +51,11 @@
         <!-- Weather Information -->
         <div class='col-8 info-wrapper'>
             <div class='card city-info'>
-                <div class='card-body' id='dailyCityWeather'>
-                    <b><h3 id='name'><span id='date'></span></b><img class='icon'/></h3></b>
-                    <p>Temperature:<span id='temp'></span>&deg;F</p>
-                    <p>Humidity:<span= id='humidity'></span> % </p>
-                    <p>Wind Speed:<span id='windspeed'></span> MPH</p>
+                <div class='card-body weather' id='dailyCityWeather'>
+                    <b><h3 class ='card-text city' id='name'>Please enter a destination</h3><span id='date'></span><img id='icon' src='assets/images/sunnyicon.svg'></b>
+                    <p>Temperature: <span id='temp'></span>&deg;F</p>
+                    <p>Humidity: <span= id='humidity'></span> % </p>
+                    <p>Wind Speed: <span id='windspeed'></span> MPH</p>
                     <p>UV Index: <span id='uvIndexCondition'>9.49</span> </p>
                 </div>
             </div>

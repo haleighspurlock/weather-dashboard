@@ -28,12 +28,27 @@ h6 {
     padding: 3px;
 }
 
-.icon {
-    width: 55px;
-    height: 55px;
-}
 
 .forcast-day-card{
     background-color: #037bff;
     color: #fff;
+}
+
+.weather{
+    display: flex;
+    flex-direction: column;
+}
+
+.city {
+    width: 50%;
+}
+
+#icon {
+    width: 55px; 
+    height: 55px;
+}
+
+.icon {
+    width: 55px;
+    height: 55px;
 }

@@ -15,16 +15,16 @@ function populateWeatherData(){
 }
 
 function getIndex(lat, long) {
-    var requestUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${long}&appid=${apiKey}`
-    function makeRequest(indexResponse){
-        console.log(indexResponse)
-    }
-    $.ajax({
-        url: requestUrl,
-        method: 'GET',
-    }).then(makeRequest)
+    // var requestUrl = `http://api.openweathermap.org/data/2.5/uvi?lat=${lat}&lon=${long}&appid=${apiKey}`
+    // function makeRequest(indexResponse){
+    //     console.log(indexResponse)
+    // }
+    // $.ajax({
+    //     url: requestUrl,
+    //     method: 'GET',
+    // }).then(makeRequest)
 }
-
+// gets searched location info from API
 function getOneLocationForcast() {
     var searchInput = $('#searchCity')
     var requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${searchInput.val()}&appid=${apiKey}`
@@ -46,14 +46,14 @@ function getOneLocationForcast() {
         $('#date').text(formatDate)
         $('#humidity').text(dailyForcastInfo.main.humidity)
         $('#windspeed').text(dailyForcastInfo.wind.speed)
-        $('#icon').val(dailyForcastInfo.weather.icon)
+        $('#icon').attr("src",`http://openweathermap.org/img/wn/${dailyForcastInfo.weather[0].icon}@2x.png`)
     }
     $.ajax({
         url: requestUrl,
         method: 'GET',
     }).then(populateOneDayForcast)
 }
-
+// populates 5 day forcast info from API
 function get5DayForcast(){
     var searchInput = $('#searchCity')
     var requestUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${searchInput.val()}&appid=${apiKey}`
@@ -75,7 +75,7 @@ function get5DayForcast(){
             <div class="card col-2 forcast-day-card" style="width: 18rem;">
                 <div class='card-body p-1'>
                     <h6 class='card-title'>${moment(weatherHour.dt_txt).format('MM/DD/YYYY')}</h6>
-                    <img class='card-img icon' ${weatherHour.weather.icon}/>
+                    <img class='card-img icon' src='http://openweathermap.org/img/wn/${weatherHour.weather[0].icon}@2x.png'/>
                     <p class='card-text'>Temp:${weatherHour.main.temp}&deg;F</p>
                     <p class='card-text'>${weatherHour.main.humidity}</p>
                 </div>
@@ -91,3 +91,21 @@ function get5DayForcast(){
 }
 
 $('#submitBtn').on('click', populateWeatherData)
+
+
+
+
+// saving to local storage
+$('.container').on('click','#submitBtn', function () {
+
+    var textArea = $('#searchCity').val()
+    
+    var getCityName = localStorage.getItem('city');
+    var city = JSON.parse(getCityName);
+    
+    if(city !==null) {
+        city.push(textArea)
+        }
+    else city = [textArea]
+    localStorage.setItem('city', JSON.stringify(city))
+})
