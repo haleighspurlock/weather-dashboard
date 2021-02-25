@@ -52,3 +52,12 @@ h6 {
     width: 55px;
     height: 55px;
 }
+
+.list-group-item{
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color:  #037bff;
+    color: white;
+}

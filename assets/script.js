@@ -8,10 +8,11 @@ var apiKey = '49283df107f4b9c05123a0013d52be80';
 var date = moment();
 var formatDate = date.format('MM/DD/YYYY');
 
-function populateWeatherData(){
-    get5DayForcast()
-    getOneLocationForcast()
-    getIndex()
+function populateWeatherData(city){
+    get5DayForcast(city)
+    getOneLocationForcast(city)
+    getIndex(city)
+    createSearchHistory(city)
 }
 
 function getIndex(lat, long) {
@@ -25,9 +26,8 @@ function getIndex(lat, long) {
     // }).then(makeRequest)
 }
 // gets searched location info from API
-function getOneLocationForcast() {
-    var searchInput = $('#searchCity')
-    var requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${searchInput.val()}&appid=${apiKey}`
+function getOneLocationForcast(city) {
+    var requestUrl = `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`
 
     function populateOneDayForcast(dailyForcastInfo){
         // var uvIndex = getIndex(dailyForcastInfo.coord.lat, dailyForcastInfo.coord.lon)
@@ -54,9 +54,8 @@ function getOneLocationForcast() {
     }).then(populateOneDayForcast)
 }
 // populates 5 day forcast info from API
-function get5DayForcast(){
-    var searchInput = $('#searchCity')
-    var requestUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${searchInput.val()}&appid=${apiKey}`
+function get5DayForcast(city){
+    var requestUrl = `http://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`
 
     function populate5DayForcast(weekForcastInfo){
         var forcastSpace = $('#forcastSpace');
@@ -90,15 +89,10 @@ function get5DayForcast(){
     }).then(populate5DayForcast)
 }
 
-$('#submitBtn').on('click', populateWeatherData)
-
-
-
-
 // saving to local storage
 $('.container').on('click','#submitBtn', function () {
-
     var textArea = $('#searchCity').val()
+    populateWeatherData(textArea)
     
     var getCityName = localStorage.getItem('city');
     var city = JSON.parse(getCityName);
@@ -107,5 +101,30 @@ $('.container').on('click','#submitBtn', function () {
         city.push(textArea)
         }
     else city = [textArea]
-    localStorage.setItem('city', JSON.stringify(city))
+    let uniqueArray = [...new Set(city)];
+    localStorage.setItem('city', JSON.stringify(uniqueArray))
+    createSearchHistory()
 })
+
+function createSearchHistory(){
+    var historySidebar = $('#list-group');
+    historySidebar.empty()
+    var getCity = localStorage.getItem('city');
+    var history = JSON.parse(getCity);
+
+    if (history !== null) {
+        var i = 0;
+        for (storedCity of history) {
+            var list = `<li class='list-group-item searchHistory' id='searchHistory${i}'>${storedCity}</li>`
+           historySidebar.append(list);
+           $(`#searchHistory${i}`).on('click', function(element){
+             populateWeatherData(element.target.innerHTML)
+           }) 
+           i++
+        }
+    }
+    
+    
+    }
+    
+    createSearchHistory()
